@@ -1,0 +1,130 @@
+/* Hover/focus states from the design's style-hover / style-focus attributes.
+   !important is needed because the base styles are inline. */
+.c11-h0:hover { background:#1b2a5c !important; }
+.c11-h1:hover { background:#ffffff !important; }
+.c11-h2:hover { background:#ff1f4b !important; }
+.c11-h3:hover { border-color:#FFC72C !important; color:#FFC72C !important; }
+.c11-h4:hover { border-color:#FFC72C !important; }
+.c11-h5:hover { border-color:#E8352B !important; }
+.c11-f0:focus { border-color:#FFC72C !important; }
+
+/* game overlays (reaction test, pit stop): scroll when the content is taller than the screen, and centre it when it
+   isn't (margin:auto rather than justify-content, which would clip the top and bottom, close button included) */
+.c11-modal { position: fixed; inset: 0; z-index: 40; overflow-y: auto; overscroll-behavior: contain; display: flex; padding: 64px 20px 32px; box-sizing: border-box; font-family: var(--font-jbmono), monospace; user-select: none; color: #eef0f2; }
+/* the tint and blur live on a pseudo-element: backdrop-filter on the overlay itself would make it the containing
+   block for the fixed close button, which then scrolled away with the content */
+.c11-modal::before { content: ""; position: fixed; inset: 0; z-index: -1; background: rgba(4,5,6,.91); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+.c11-modal-in { margin: auto; display: flex; flex-direction: column; align-items: center; max-width: 100%; }
+.c11-x { position: fixed; top: 16px; right: 16px; z-index: 41; width: 44px; height: 44px; display: grid; place-items: center; background: rgba(9,15,34,.9); color: #eef0f2; border: 1px solid rgba(255,255,255,.2); font-size: 16px; cursor: pointer; }
+.c11-x:hover, .c11-x:focus-visible { border-color: #FFC72C; color: #FFC72C; outline: none; }
+/* the pit stop's car diagram is ~350px tall; shrink it so the whole game fits on a laptop screen */
+@media (max-height: 760px) { .c11-pitgrid { zoom: .78; } .c11-modal { padding-top: 56px; } }
+
+/* free practice touch controls: steering bottom-left, pedals bottom-right; only on touch screens */
+.c11-touch { display: none; position: fixed; left: 16px; right: 16px; bottom: 20px; z-index: 30; justify-content: space-between; pointer-events: none; }
+.c11-touch > div { display: flex; gap: 12px; pointer-events: auto; }
+.c11-touch button { width: 72px; height: 72px; border-radius: 50%; background: rgba(9,15,34,.82); color: #eef0f2; border: 1px solid rgba(255,255,255,.22); font: 700 12px var(--font-jbmono), monospace; letter-spacing: .08em; touch-action: none; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; }
+.c11-touch button:active { background: #1b2a5c; }
+.c11-touch [data-k="gas"] { background: rgba(43,217,107,.25); border-color: #2BD96B; }
+.c11-touch [data-k="brake"] { background: rgba(232,53,43,.22); border-color: #E8352B; }
+@media (pointer: coarse) { .c11-touch { display: flex; } }
+
+/* header: a soft scrim so section titles scrolling underneath don't collide with the buttons */
+.c11-hdr::before { content: ""; position: absolute; inset: 0 0 -28px; z-index: -1; pointer-events: none; background: linear-gradient(180deg, rgba(5,9,20,.82), rgba(5,9,20,0)); }
+.c11-short { display: none; }
+/* phones: one row. Free practice stays reachable from the finish screen, sound becomes an icon, the CTA a short label */
+@media (max-width: 640px) {
+  .c11-hdr { flex-wrap: nowrap !important; gap: 8px !important; padding: 12px 14px !important; }
+  .c11-hdr nav { flex-wrap: nowrap !important; }
+  .c11-hdr-sub, .c11-nb-fp, .c11-lbl, .c11-long { display: none !important; }
+  .c11-short { display: inline; }
+  .c11-nb { padding: 10px 13px !important; white-space: nowrap; }
+}
+@media (max-width: 360px) { .c11-hdr button[aria-label^="Krish"] > div:last-child { display: none; } }
+
+/* keyboard focus: an outline for most controls, plus an inset ring for the slanted (clip-path) buttons that clip outlines */
+.c11-root :is(button, a, input, textarea, label):focus-visible { outline: 2px solid #FFC72C; outline-offset: 3px; box-shadow: inset 0 0 0 2px #FFC72C; }
+
+/* the sections' 3D reveal tilt projects their near edge a little wider than the screen, and transforms count as
+   overflow: on phones that widened the page and zoomed it out. clip (unlike hidden) keeps the hero's sticky working */
+.c11-root > main { overflow-x: clip; }
+
+/* ---------- "Inside car 21" part callouts ----------
+   positioned per frame by Car11 (the root at the part's screen point, [data-card] offset beside it, [data-lead] sized);
+   --c is the part's accent. The card is a chamfered spec plate in carbon weave; its content lands in a short stagger
+   when the card reaches the hold (data-on), the one authored motion of the breakdown. */
+.c11-part { position: absolute; left: 0; top: 0; transform-style: preserve-3d; }
+.c11-part-pin { position: absolute; left: -9px; top: -9px; width: 18px; height: 18px; border-radius: 50%; box-sizing: border-box; border: 2px solid var(--c); box-shadow: 0 0 0 5px color-mix(in srgb, var(--c) 18%, transparent); }
+.c11-part-pin::after { content: ""; position: absolute; inset: 4px; border-radius: 50%; background: var(--c); }
+.c11-part-lead { position: absolute; left: 0; top: 0; width: 110px; height: 1px; transform-origin: 0 0; background: linear-gradient(90deg, var(--c), color-mix(in srgb, var(--c) 45%, transparent)); }
+.c11-part-card { position: absolute; left: 0; top: 0; width: 344px; max-width: 78vw; transform-origin: 0 50%; filter: drop-shadow(0 26px 40px rgba(0,0,0,.55)) drop-shadow(0 2px 6px rgba(0,0,0,.4)); }
+.c11-part-body { position: relative; padding: 18px 22px 22px; box-sizing: border-box; color: #eef0f2; font-family: var(--font-anybody), sans-serif;
+  clip-path: polygon(0 0, calc(100% - 22px) 0, 100% 22px, 100% 100%, 0 100%);
+  border-top: 3px solid var(--c);
+  background:
+    repeating-linear-gradient(45deg, rgba(255,255,255,.022) 0 2px, transparent 2px 5px),
+    repeating-linear-gradient(-45deg, rgba(0,0,0,.2) 0 2px, transparent 2px 5px),
+    linear-gradient(165deg, rgba(20,33,72,.97), rgba(6,10,22,.97) 70%); }
+/* the chamfer's edge, continuing the top rule round the cut corner */
+.c11-part-body::after { content: ""; position: absolute; top: -3px; right: 0; width: 25px; height: 25px; background: linear-gradient(45deg, transparent calc(50% - 1.5px), var(--c) calc(50% - 1.5px), var(--c) calc(50% + 1.5px), transparent calc(50% + 1.5px)); }
+.c11-part-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding-right: 14px; font-family: var(--font-jbmono), monospace; font-size: 10px; letter-spacing: .2em; color: var(--c); }
+.c11-part-n { color: rgba(238,240,242,.5); letter-spacing: .12em; font-variant-numeric: tabular-nums; }
+.c11-part-n b { color: #eef0f2; font-weight: 700; }
+.c11-part-ticks { display: flex; gap: 4px; margin: 10px 0 16px; }
+.c11-part-ticks i { position: relative; flex: 1; height: 2px; background: rgba(238,240,242,.14); }
+.c11-part-ticks i.on::after { content: ""; position: absolute; inset: 0; background: var(--c); }
+.c11-part-title { margin: 0; font-weight: 900; font-stretch: 130%; font-style: italic; font-size: 30px; line-height: .92; letter-spacing: -.01em; text-transform: uppercase; }
+.c11-part-desc { margin: 10px 0 0; max-width: 34ch; font-size: 14px; line-height: 1.55; color: #c3cad6; text-wrap: pretty; }
+.c11-part-stack { display: flex; flex-wrap: wrap; gap: 6px; margin: 16px 0 0; padding: 14px 0 0; list-style: none; border-top: 1px solid rgba(238,240,242,.1); }
+.c11-part-stack li { padding: 5px 9px; font-family: var(--font-jbmono), monospace; font-size: 11px; color: #e3e7ee; background: rgba(238,240,242,.05); border: 1px solid rgba(238,240,242,.14); }
+
+/* the landing: rule ticks fill in order, the title wipes in along its slant, copy and stack follow */
+.c11-part-head, .c11-part-desc, .c11-part-stack li { opacity: 0; transform: translateY(6px); transition: opacity .4s cubic-bezier(.16,1,.3,1), transform .55s cubic-bezier(.16,1,.3,1); }
+.c11-part-title { clip-path: inset(-10% 100% -10% 0); transition: clip-path .6s cubic-bezier(.16,1,.3,1) .08s; }
+.c11-part-ticks i.on::after { transform: scaleX(0); transform-origin: 0 50%; transition: transform .35s cubic-bezier(.16,1,.3,1) calc(var(--j) * 45ms); }
+[data-on="1"] .c11-part-head { opacity: 1; transform: none; }
+[data-on="1"] .c11-part-ticks i.on::after { transform: none; }
+[data-on="1"] .c11-part-title { clip-path: inset(-10% -4% -10% 0); }
+[data-on="1"] .c11-part-desc { opacity: 1; transform: none; transition-delay: .2s; }
+[data-on="1"] .c11-part-stack li { opacity: 1; transform: none; transition-delay: calc(.3s + var(--j) * 45ms); }
+@media (prefers-reduced-motion: reduce) {
+  .c11-part-head, .c11-part-desc, .c11-part-stack li, .c11-part-title, .c11-part-ticks i.on::after { transition: none; opacity: 1; transform: none; clip-path: none; }
+}
+@media (max-width: 640px) {
+  .c11-part-body { padding: 16px 18px 18px; }
+  .c11-part-title { font-size: 25px; }
+  .c11-part-desc { font-size: 13.5px; }
+}
+
+/* the part list beside the breakdown: clickable only while the breakdown is on screen */
+.c11-rail { pointer-events: none; }
+[data-live="1"] .c11-rail { pointer-events: auto; }
+.c11-rail button:hover { color: #eef0f2 !important; }
+
+/* ---------- responsive sections ---------- */
+/* phones: project cards stay two-up but smaller, and the selected project's copy and setup sheet stack */
+@media (max-width: 640px) {
+  .c11-projgrid { gap: 12px !important; }
+  .c11-proj-livery { height: 88px !important; }
+  .c11-proj-num { font-size: 38px !important; }
+  .c11-proj-name { font-size: 14px !important; font-stretch: 108% !important; }
+  .c11-proj-ring { display: none !important; } /* the compound is written right underneath */
+  .c11-projdetail { grid-template-columns: minmax(0, 1fr) !important; gap: 18px !important; }
+  /* standings: each round becomes two lines, the badge and event, then role and result, instead of four cramped columns */
+  .c11-st-head { display: none !important; }
+  .c11-st-row { grid-template-columns: 44px minmax(0, 1fr) auto !important; grid-template-areas: "rnd ev ev" ". role f1"; row-gap: 10px !important; align-items: start !important; }
+  .c11-st-row > :nth-child(1) { grid-area: rnd; }
+  .c11-st-row > :nth-child(2) { grid-area: ev; }
+  .c11-st-row > :nth-child(3) { grid-area: role; }
+  .c11-st-row > :nth-child(4) { grid-area: f1; }
+  /* skills: the four gauges two-up */
+  .c11-gauges { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 10px !important; }
+  .c11-dial { width: 104px !important; height: 104px !important; }
+}
+/* short landscape screens (phones on their side): the hero copy shrinks and drops its gesture hints so the car stays
+   visible; the race tower and map are hidden there too (Car11.updateTower), leaving the speed HUD */
+@media (max-height: 520px) and (orientation: landscape) {
+  .c11-hero-h1 { font-size: 40px !important; }
+  .c11-hero-cue { display: none !important; }
+  .c11-hdr { padding: 10px 16px !important; }
+}
