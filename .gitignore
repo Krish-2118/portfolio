@@ -39,3 +39,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# source 3D model (processed into public/models/rb22.glb by `npm run model:rb22`)
+/untitled.glb
